@@ -31,7 +31,16 @@ const DEFAULT_DB: Database = {
     blocks: []
 };
 
-// Ensure DB exists
+// Global in-memory fallback for Vercel/Read-only environments
+declare global {
+    var _db: Database | undefined;
+}
+
+if (!global._db) {
+    global._db = { ...DEFAULT_DB };
+}
+
+// Ensure DB exists (local only)
 function ensureDB() {
     try {
         if (!fs.existsSync(DATA_DIR)) {
@@ -41,7 +50,7 @@ function ensureDB() {
             fs.writeFileSync(DB_PATH, JSON.stringify(DEFAULT_DB, null, 2), 'utf-8');
         }
     } catch (error) {
-        console.error('Database initialization failed:', error);
+        // Silently fail on read-only FS
     }
 }
 
@@ -49,17 +58,28 @@ function ensureDB() {
 export function readDB(): Database {
     try {
         ensureDB();
-        if (!fs.existsSync(DB_PATH)) return DEFAULT_DB;
-        const data = fs.readFileSync(DB_PATH, 'utf-8');
-        return JSON.parse(data);
+        if (fs.existsSync(DB_PATH)) {
+            const data = fs.readFileSync(DB_PATH, 'utf-8');
+            const fileDB = JSON.parse(data);
+            // Sync in-memory with file if file exists (for hybrid envs)
+            global._db = fileDB;
+            return fileDB;
+        }
     } catch (error) {
-        console.error('Error reading DB:', error);
-        return DEFAULT_DB;
+        // Fallback to memory
     }
+    return global._db || DEFAULT_DB;
 }
 
 // Write DB
 export function writeDB(data: Database) {
-    ensureDB();
-    fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2), 'utf-8');
+    // Always update memory first
+    global._db = data;
+
+    try {
+        ensureDB();
+        fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2), 'utf-8');
+    } catch (error) {
+        console.error('Write to disk failed (expected on Vercel), using in-memory store.');
+    }
 }
