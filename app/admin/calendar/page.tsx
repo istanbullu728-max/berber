@@ -457,21 +457,33 @@ export default function CalendarPage() {
 
     const act = async (id: string, action: string) => {
         const a = appointments.find(x => x.id === id); if (!a) return;
-        let status: Appointment['status'] = 'pending'; let msg = '';
+
+        // Optimistic Update: Update UI immediately
+        let newStatus: Appointment['status'] = 'pending';
+        let msg = '';
         switch (action) {
-            case 'confirm': status = 'confirmed'; msg = `📱 Onay SMS'i → ${a.customerPhone}`; break;
-            case 'cancel': status = 'cancelled'; msg = `📱 İptal → ${a.customerPhone}`; break;
-            case 'complete': status = 'completed'; msg = `✅ Tamamlandı: ${a.customerName}`; break;
+            case 'confirm': newStatus = 'confirmed'; msg = `📱 Onay SMS'i → ${a.customerPhone}`; break;
+            case 'cancel': newStatus = 'cancelled'; msg = `📱 İptal → ${a.customerPhone}`; break;
+            case 'complete': newStatus = 'completed'; msg = `✅ Tamamlandı: ${a.customerName}`; break;
         }
-        await updateApptStatusApi(id, status);
-        addToast(msg, action === 'complete' ? 'success' : 'sms', 5000);
-        refresh(); setTooltip(null);
+
+        // Update local state instantly
+        setAppointments(prev => prev.map(app => app.id === id ? { ...app, status: newStatus } : app));
+        setTooltip(null);
+        addToast(msg, action === 'complete' ? 'success' : 'sms', 2000);
+
+        // Perform API call in background
+        await updateApptStatusApi(id, newStatus);
+
+        // Refresh to ensure sync (optional but good practice)
+        refresh();
     };
 
     const qAppt = async (d: { name: string; phone: string; serviceId: string }) => {
         if (!quickAdd) return;
         const s = SERVICES.find(x => x.id === d.serviceId); if (!s) return;
 
+        // Optimistic add could be complex, keeping strict for creation
         await createAppointment({
             customerName: d.name,
             customerPhone: d.phone,
@@ -495,7 +507,12 @@ export default function CalendarPage() {
         addToast(`🔒 ${reason}: ${quickAdd.time}–${end}`, 'info');
         setQuickAdd(null); refresh();
     };
-    const delBlock = async (id: string) => { await deleteBlock(id); addToast('Blok kaldırıldı', 'success'); refresh(); };
+    const delBlock = async (id: string) => {
+        setBlocks(prev => prev.filter(b => b.id !== id)); // Optimistic delete
+        await deleteBlock(id);
+        addToast('Blok kaldırıldı', 'success');
+        refresh();
+    };
     if (!mounted) return null;
 
     return (
@@ -510,12 +527,17 @@ export default function CalendarPage() {
                             {viewMode === 'week' ? `${formatShortDate(weekDays[0])} — ${formatShortDate(weekDays[6])}` : currentDate.toLocaleDateString('tr-TR', { weekday: 'long', day: 'numeric', month: 'long' })}
                         </p>
                     </div>
-                    <div className="flex rounded-xl bg-surface p-1 shadow-inner">
-                        {([['week', 'Hafta'], ['day', 'Gün']] as const).map(([k, l]) => (
-                            <button key={k} onClick={() => setViewMode(k)}
-                                className={`px-4 sm:px-5 py-2 rounded-lg text-xs font-bold transition-all active:scale-95 ${viewMode === k ? 'bg-white text-charcoal shadow-sm' : 'text-muted hover:text-body'
-                                    }`}>{l}</button>
-                        ))}
+                    <div className="flex items-center gap-2">
+                        <button onClick={refresh} className="w-10 h-10 rounded-xl bg-surface flex items-center justify-center text-muted hover:text-charcoal active:scale-95 transition-all" title="Yenile">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-5 h-5"><path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" /></svg>
+                        </button>
+                        <div className="flex rounded-xl bg-surface p-1 shadow-inner">
+                            {([['week', 'Hafta'], ['day', 'Gün']] as const).map(([k, l]) => (
+                                <button key={k} onClick={() => setViewMode(k)}
+                                    className={`px-4 sm:px-5 py-2 rounded-lg text-xs font-bold transition-all active:scale-95 ${viewMode === k ? 'bg-white text-charcoal shadow-sm' : 'text-muted hover:text-body'
+                                        }`}>{l}</button>
+                            ))}
+                        </div>
                     </div>
                 </div>
 
