@@ -75,7 +75,10 @@ export default function Footer() {
 
                 {/* Bottom */}
                 <div className="mt-12 pt-6 border-t border-border-light flex flex-col sm:flex-row justify-between items-center gap-4">
-                    <p className="text-xs text-muted">© 2026 Randevum Barber. Tüm hakları saklıdır.</p>
+                    <div className="flex items-center gap-4">
+                        <p className="text-xs text-muted">© 2026 Randevum Barber. Tüm hakları saklıdır.</p>
+                        <Link href="/admin" className="text-[10px] text-muted/50 hover:text-brass transition-colors">Yönetici</Link>
+                    </div>
                     <p className="text-xs text-muted">Designed with ✦ Premium Quality</p>
                 </div>
             </div>
