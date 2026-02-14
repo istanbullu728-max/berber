@@ -1,0 +1,23 @@
+{
+    "project_name": "BarberSaaS",
+    "architect": "BarberSaaS Architect",
+    "owner": "Hasan",
+    "status": "initialization",
+    "current_step": "Database Schema Design",
+    "completed_steps": [
+        "Role Definition",
+        "Project Memory Initialization"
+    ],
+    "technical_stack": {
+        "framework": "Next.js 14 (App Router)",
+        "styling": "Tailwind CSS",
+        "database": "PostgreSQL (Delayed)",
+        "deployment": "Vercel"
+    },
+    "history": [
+        {
+            "date": "2026-02-13",
+            "action": "Project started. Role defined and memory initialized."
+        }
+    ]
+}

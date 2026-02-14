@@ -1,0 +1,252 @@
+@import "tailwindcss";
+
+/* ========= SOPHISTICATED LIGHT THEME ========= */
+@theme {
+  /* Background Layers */
+  --color-cream: #F9F9F7;
+  --color-card: #FFFFFF;
+  --color-surface: #F3F3F0;
+
+  /* Accent — Brushed Brass / Copper */
+  --color-brass: #B08D57;
+  --color-brass-dark: #8C6D3F;
+  --color-copper: #A0714F;
+
+  /* Text */
+  --color-charcoal: #1A1A1A;
+  --color-body: #6B7280;
+  --color-muted: #9CA3AF;
+
+  /* Borders & Lines */
+  --color-border: #E5E7EB;
+  --color-border-light: #F0F0ED;
+
+  /* Typography */
+  --font-serif: 'DM Serif Display', serif;
+  --font-sans: 'Inter', sans-serif;
+}
+
+/* ========= BASE ========= */
+html {
+  scroll-behavior: smooth;
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-cream);
+  color: var(--color-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior-y: none;
+}
+
+/* ========= MOBILE TOUCH ========= */
+@media (max-width: 768px) {
+  body {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  /* Minimum 48px touch targets */
+  button,
+  a,
+  [role="button"] {
+    min-height: 44px;
+  }
+
+  /* Sticky bottom CTA safe area */
+  .mobile-bottom-safe {
+    padding-bottom: env(safe-area-inset-bottom, 16px);
+  }
+}
+
+/* ========= UTILITIES ========= */
+.glass-light {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(229, 231, 235, 0.6);
+}
+
+.glass-card {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+}
+
+.glass-card-hover {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+  transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.glass-card-hover:hover {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06), 0 2px 8px rgba(0, 0, 0, 0.03);
+  transform: translateY(-2px);
+  border-color: #D1D5DB;
+}
+
+.brass-glow {
+  box-shadow: 0 4px 20px rgba(176, 141, 87, 0.15);
+}
+
+.brass-glow-strong {
+  box-shadow: 0 6px 30px rgba(176, 141, 87, 0.25);
+}
+
+.gradient-brass {
+  background: linear-gradient(135deg, #B08D57, #A0714F);
+}
+
+/* ========= SNAP SCROLL (MOBILE CAROUSEL) ========= */
+.snap-carousel {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  gap: 16px;
+  padding: 0 24px;
+}
+
+.snap-carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.snap-carousel>* {
+  scroll-snap-align: center;
+  flex-shrink: 0;
+}
+
+/* ========= SCROLLBAR ========= */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F3F3F0;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #D1D5DB;
+  border-radius: 99px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #B08D57;
+}
+
+/* ========= ANIMATIONS ========= */
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-brass {
+
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(176, 141, 87, 0.3);
+  }
+
+  50% {
+    box-shadow: 0 0 0 12px rgba(176, 141, 87, 0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-slide-in {
+  animation: slide-in 0.5s ease-out;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.animate-fade-up {
+  animation: fade-up 0.6s ease-out;
+}
+
+.animate-pulse-brass {
+  animation: pulse-brass 2s infinite;
+}
+
+.animate-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(176, 141, 87, 0.06), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* ========= BUTTON RIPPLE ========= */
+.btn-ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-ripple::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at center, rgba(176, 141, 87, 0.12) 0%, transparent 70%);
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+
+.btn-ripple:hover::after {
+  opacity: 1;
+}
+
+/* ========= IMAGE OVERLAY ========= */
+.image-light-overlay {
+  position: relative;
+}
+
+.image-light-overlay::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(249, 249, 247, 0.15);
+  pointer-events: none;
+}

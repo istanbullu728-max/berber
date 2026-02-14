@@ -1,0 +1,75 @@
+{
+  "appointments": [
+    {
+      "customerName": "hasan istanbul",
+      "customerPhone": "05398947538",
+      "serviceId": "1",
+      "date": "2026-02-16",
+      "startTime": "13:30",
+      "endTime": "14:15",
+      "id": "29dwd6zwk",
+      "status": "confirmed",
+      "createdAt": "2026-02-14T15:39:00.335Z"
+    },
+    {
+      "customerName": "hasan istanbul",
+      "customerPhone": "05398947538",
+      "serviceId": "1",
+      "date": "2026-02-18",
+      "startTime": "11:30",
+      "endTime": "12:15",
+      "id": "ydelzlchk",
+      "status": "confirmed",
+      "createdAt": "2026-02-14T16:25:54.338Z"
+    }
+  ],
+  "settings": {
+    "shopName": "BarberSaaS",
+    "smsHeader": "BARBERSAAS",
+    "workingHours": [
+      {
+        "dayOfWeek": 0,
+        "startTime": "00:00",
+        "endTime": "00:00",
+        "isDayOff": true
+      },
+      {
+        "dayOfWeek": 1,
+        "startTime": "09:00",
+        "endTime": "21:00",
+        "isDayOff": false
+      },
+      {
+        "dayOfWeek": 2,
+        "startTime": "09:00",
+        "endTime": "21:00",
+        "isDayOff": false
+      },
+      {
+        "dayOfWeek": 3,
+        "startTime": "09:00",
+        "endTime": "21:00",
+        "isDayOff": false
+      },
+      {
+        "dayOfWeek": 4,
+        "startTime": "09:00",
+        "endTime": "21:00",
+        "isDayOff": false
+      },
+      {
+        "dayOfWeek": 5,
+        "startTime": "09:00",
+        "endTime": "21:00",
+        "isDayOff": false
+      },
+      {
+        "dayOfWeek": 6,
+        "startTime": "09:00",
+        "endTime": "20:00",
+        "isDayOff": false
+      }
+    ]
+  },
+  "blocks": []
+}
